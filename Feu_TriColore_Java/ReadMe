@@ -1,0 +1,7 @@
+commande de compilation :
+ Il faut être dans le repertoire src/ puis lancer les commandes suivantes:
+ 
+- Pour compiler :
+    javac -d ../build model/*.java vue/*.java util/ColorEnum.java util/observer/*.java demo/*.java
+- Pour executer :
+    java -cp ../build src.demo.GUI
