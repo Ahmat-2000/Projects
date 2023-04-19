@@ -1,0 +1,585 @@
+				Partie 3 :
+----------------------------------------------------------------------------------------------------------------------------------------------
+Algorithme global :
+-------------------
+Dans cette partie on va décrire les algorithmes les plus importants de notre jeu, ces algorithmes se basent sur les anciens principes de SOKOBAN des années 90.
+Dans les parties précedantes on a détaillé ces principes et le mode de jeu.D'après ces principes, on constate que le jeu se résume sur le déplacement du personnage et celui des caisses.
+Dans cette partie on va décrire nottament l'algorithme de déplacement du personnage qui va engendrer le déplacement des caisses et  deux autres algorithmes qui nous permettent de savoir si le joueur a gagné ou a perdu dans le jeu.
+
+Remarque :
+---------
+D'après les régles du jeu:
+--le personnage ne peut pousser qu'une seule caisse et ne peut pas tirer les caisses et aussi le personnage ne peut se déplacer que dans les 4 directions;
+--le joueur gagne s'il a rangé toutes les caisses sur les objectifs marqués par des points vertes;
+--le joueur perd si une caisse se trouve bloquer et qu'il n'y a pas une solution possible.
+
+STRUCTURES ET BIBLIOTHEQUES :
+-----------------------------
+les Bibliothéques utilisées dans le jeu sont : la bibliothéque Random, Time et Pygame.
+Les structures utilisées dans l'application et dans les algorithmes qu'on va les décrire ci-desous sont : les tuples et les listes.
+
+ALGORITHME DU DEPLACEMENT DU PERSONNAGE:
+----------------------------------------
+En entrée notre algorithme va recevoir deux choses, une liste de dimension 2 qui représentera le niveau à jouer et une variable qui représentera la direction( Droite, Gauche, Haut, Bas) du personnage.
+Soient Niveau cette liste et Direction la variable.
+Notre niveau est constitué du personnage, personnage_sur_Objectif, des Caisses, des Caisses_sur_Objectif, de l'espace vide, des Objectifs et du Mur.
+On utilise une procédure pour cette algorithme.
+Pour faire de commentaire, on utlise "#" comme en python et pour la différence on utilise " != "
+-----------------------------------------------------------------------------------------------------------------------------------
+Procedure DEPLACEMENT(Niveau, Direction)
+DECLARATION:
+	I de type nombre Entier naturel
+	J de type nombre Entier naturel
+	L de type nombre Entier naturel		# L => ligne et C => colonne
+	C de type nombre Entier naturel
+
+Debut
+
+	# on parcourt notre liste Niveau pour récuperer les coordonnées initialles du personnage
+
+	Pour I allant de 1 à longueur de Niveau faire
+	Debut Pour
+		Pour J allant de 1 à longueur de Niveau[I] faire
+		Debut Pour
+			# on teste toutes les positions une par une pour touvrer celle du personnage
+			Si Niveau[I][J] = Peronnage ou Niveau[I][J] = Personnage_sur_Objectif alors
+			Debut Si
+				L --> I
+				C --> J	
+			fin Si
+		Fin Pour 
+	Fin Pour 
+
+# En sortant du boucle, on va tester si Niveau[L][C] = Personnage ou bien Niveau[L][C] = Personnage_sur_Objectif et que Niveau[L][C+1] != Mur
+	Si Niveau[L][C] = Personnage alors
+	Debut Si
+		# On va tester la variable Direction pour savoir dans quelle direction le personnage va se diriger.
+
+		Si Direction = Droite alors
+		Debut Si
+			# on teste la position suivante qui est (L,C+1)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L][C+1] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L][C+1] --> Personnage	# on déplace le personnage à la position (L,C+1)
+			Fin Si 
+			
+			Si Niveau[L][C+1] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+			Fin Si 
+			
+			Si Niveau[L][C+1] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C+2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C+2] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse	# on déplace la Caisse à la position (L,C+2)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage		# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L][C+1] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C+2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C+2] = Vide alors         			# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide				# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse			# on déplace la Caisse à la position (L,C+2)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+         			-------------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Gauche  alors   
+		Debut Si
+			# on teste la position suivante qui est (L,C-1)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L][C+1] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L][C-1] --> Personnage	# on déplace le personnage à la position (L,C-1)
+			Fin Si 
+			
+			Si Niveau[L][C-1] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+			Fin Si 
+			
+			Si Niveau[L][C-1] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C-2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C-2] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse	# on déplace la Caisse à la position (L,C-2)
+				Fin Si
+
+				Si Niveau[L][C-2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage		# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si
+			Si Niveau[L][C-1] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C-2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C-2] = Vide alors         			# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse			# on déplace la Caisse à la position (L,C-2)
+				Fin Si
+
+				Si Niveau[L][C-2] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si  
+		Fin Si 
+		--------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Bas alors
+		Debut Si
+			# on teste la position suivante qui est (L,C+1)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L][C+1] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L+1][C] --> Personnage	# on déplace le personnage à la position (L+1,C)
+			Fin Si 
+			
+			Si Niveau[L+1][C] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L+1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L+1,C)
+			Fin Si 
+			
+			Si Niveau[L+1][C] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L+2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou Caisse_sur_Objectif
+				Si Niveau[L+2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage	# on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse	# on déplace la Caisse à la position (L+2,C)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage		# on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L+1][C] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L+2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou Caisse_sur_Objectif
+				Si Niveau[L+2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			    # on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage_sur_objectif    # on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse		      # on déplace la Caisse à la position (L+2,C)
+				Fin Si
+
+				Si Niveau[L+2][C] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage_sur_Objectif     # on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+		----------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Haut alors
+		Debut Si
+			# on teste la position suivante qui est (L-1,C)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L-1][C] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L-1][C] --> Personnage	# on déplace le personnage à la position (L-1,C)
+			Fin Si 
+			
+			Si Niveau[L-1][C] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+			Fin Si 
+			
+			Si Niveau[L-1][C] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L-2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L-2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse	# on déplace la Caisse à la position (L-2,C)
+				Fin Si
+
+				Si Niveau[L-2][C] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage		# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L-1][C] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L-2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L-2][C] = Vide alors          		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide				# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse			# on déplace la Caisse à la position (L-2,C)
+				Fin Si
+
+				Si Niveau[L-2][C] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide				# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+	Fin Si
+	--------------------------------------------------------------------------------------------------------------------------------------
+	Si Niveau[L][C] = Personnage_sur_Objectif alors
+	Debut Si
+		# On va tester la variable Direction pour savoir dans quelle direction le personnage va se diriger.
+		-------------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Droite alors
+		Debut Si
+			# on teste la position suivante qui est (L,C+1)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L][C+1] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Objectif 		# on remet l'ancienne position du personnage à vide
+				Niveau[L][C+1] --> Personnage		# on déplace le personnage à la position (L,C+1)
+			Fin Si 
+			
+			Si Niveau[L][C+1] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+				Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+			Fin Si 
+			
+			Si Niveau[L][C+1] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C+2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C+2] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 	# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse	# on déplace la Caisse à la position (L,C+2)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 		# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage		# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L][C+1] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C+2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C+2] = Vide alors         			# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse			# on déplace la Caisse à la position (L,C+2)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C+1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C+1)
+					Niveau[L][C+2] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+         			-------------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Gauche  alors   
+		Debut Si
+			# on teste la position suivante qui est (L,C-1)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L][C+1] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L][C-1] --> Personnage	# on déplace le personnage à la position (L,C-1)
+			Fin Si 
+			
+			Si Niveau[L][C-1] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+			Fin Si 
+			
+			Si Niveau[L][C-1] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C-2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C-2] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse	# on déplace la Caisse à la position (L,C-2)
+				Fin Si
+
+				Si Niveau[L][C-2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage		# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L][C-1] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L,C-2). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L][C-2] = Vide alors         			# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse			# on déplace la Caisse à la position (L,C-2)
+				Fin Si
+
+				Si Niveau[L][C-2] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif			# on remet l'ancienne position du personnage à vide
+					Niveau[L][C-1] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L,C-1)
+					Niveau[L][C-2] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+		--------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Bas alors
+		Debut Si
+			# on teste la position suivante qui est (L+1,C)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L+1][C] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Objectif 	# on remet l'ancienne position du personnage à vide
+				Niveau[L+1][C] --> Personnage	# on déplace le personnage à la position (L+1,C)
+			Fin Si 
+			
+			Si Niveau[L+1][C] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+				Niveau[L+1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L+1,C)
+			Fin Si 
+			
+			Si Niveau[L+1][C] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L+2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou Caisse_sur_Objectif
+				Si Niveau[L+2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 	# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage	# on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse	# on déplace la Caisse à la position (L+2,C)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 		# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage		# on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			Si Niveau[L+1][C] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L+2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou Caisse_sur_Objectif
+				Si Niveau[L+2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> objectif      		    # on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage_sur_objectif    # on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse		      # on déplace la Caisse à la position (L+2,C)
+				Fin Si
+
+				Si Niveau[L][C+2] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif			# on remet l'ancienne position du personnage à vide
+					Niveau[L+1][C] --> Personnage_sur_Objectif     # on déplace le personnage à la position (L+1,C)
+					Niveau[L+2][C] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+		----------------------------------------------------------------------------------------------------------------------------
+		Si Direction = Haut alors
+		Debut Si
+			# on teste la position suivante qui est (L-1,C)	pour voire si ce possible de se deplacer.
+			# le personnage peut se déplacer si la position suivante est différent d'un Mur			
+			Si Niveau[L-1][C] = Vide alors			
+			Debut Si
+				Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+				Niveau[L-1][C] --> Personnage	# on déplace le personnage à la position (L-1,C)
+			Fin Si 
+			
+			Si Niveau[L-1][C] = Objectif alors			
+			Debut Si
+				Niveau[L][C] --> Vide 				# on remet l'ancienne position du personnage à vide
+				Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+			Fin Si 
+			
+			Si Niveau[L-1][C] = Caisse alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L-2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L-2][C] = Vide alors          # le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 		# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse	# on déplace la Caisse à la position (L-2,C)
+				Fin Si
+
+				Si Niveau[L-2][C] = Objectif alors         	# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Vide 			# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage		# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse_sur_Objectif	# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+			
+			Si Niveau[L-1][C] = Caisse_sur_Objectif alors			
+			Debut Si
+				# On va encore tester la position suivante qui est (L-2,C). 
+				# le personnage peut se déplacer si cette position est différente de Caisse, Mur ou bien Caisse_sur_Objectif
+				Si Niveau[L-2][C] = Vide alors          		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif			# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse			# on déplace la Caisse à la position (L-2,C)
+				Fin Si
+
+				Si Niveau[L-2][C] = Objectif alors         		# le personnage et la caisse peuvent se déplacer
+				Debut Si
+					Niveau[L][C] --> Objectif 			# on remet l'ancienne position du personnage à vide
+					Niveau[L-1][C] --> Personnage_sur_Objectif	# on déplace le personnage à la position (L-1,C)
+					Niveau[L-2][C] --> Caisse_sur_Objectif		# on déplace la Caisse sur l'Objectif
+				Fin Si
+			Fin Si 
+		Fin Si 
+	Fin Si
+FIn 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ALGORITHME DE VICTOIRE:
+-----------------------
+Dans cette algorithme va utiliser trois variables, l'une va stocker le nombre de caisses, l'autre le nombre des objectifs et une variable booleenne qui va stocker soit 0, soit 1 ( 0--> faut et 1 --> vrai )
+Dans cette algorithme on utilise une fontion pour faire les opérations et cette fonction va retourner la variable booleenne.
+En entrée la fonction a besoin d'une liste qui represente le niveau à jouer.
+
+FONCTION victoire(Niveau)
+DECLARATION:
+	I de type nombre Entier naturel
+	J de type nombre Entier naturel
+	Nombre_Caisse de type entier et Nombre_Caisse --> 0
+	Nombre_Objectif de type entier et Nombre_Objectif --> 0
+	Gagner de type booleen et Gagner --> 0
+Debut 
+	# on parcourt notre liste Niveau 
+
+	Pour I allant de 1 à longueur de Niveau faire
+	Debut Pour
+		Pour J allant de 1 à longueur de Niveau[I] faire
+		Debut Pour
+			# on teste toutes les positions une par une pour touvrer celles des caisses et Objectifs
+			Si Niveau[I][J] = Caisse alors
+			Debut Si
+				Nombre_Caisse --> Nombre_Caisse + 1
+			fin Si
+			
+			Si Niveau[I][J] = Objectif alors
+			Debut Si
+				Nombre_Objectif --> Nombre_Objectif + 1
+			fin Si
+		Fin Pour 
+	Fin Pour 
+	# A la sorti du boucle, on vérifie que si le Nombre_Objectif = 0 et Nombre_Caisse = 0 alors le joeur gagne.
+	Si Nombre_Objectif = 0 et Nombre_Caisse = 0 alors
+	Debut Si
+		Gagner --> 1
+	Fin Si
+	# A la sorti de la fonction, on retourne la variable Gagner
+	Retourne(Gagner)
+Fin
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+ALGORITHME D'ECHEC:
+-------------------
+Cet algorithme à besoin en entrée une liste et donne en sorti retourne une variable booleenne
+Dans cet algorithme on vérifie à chaque moment si une caisse se trouve bloquer ou non
+
+FONCTION échec(Niveau)
+DECLARATION:
+	I de type nombre Entier naturel
+	J de type nombre Entier naturel
+	Echec de type booleen et Gagner --> Faux
+Debut 
+	# on parcourt notre liste Niveau 
+
+	Pour I allant de 1 à longueur de Niveau faire
+	Debut Pour
+		Pour J allant de 1 à longueur de Niveau[I] faire
+		Debut Pour
+			# on teste toutes les positions une par une pour touvrer celles des caisses 
+			Si Niveau[I][J] = Caisse alors
+			Debut Si
+			# si une caisse se trouve bloquer dans un coin formé par deux mur
+				Si Niveau[I][J+1] = Mur et (Niveau[I+1][J] = Mur ou Niveau[I-1][J] = Caisse) alors
+				Debut si
+					ECHEC --> Vrai
+				Fin Si
+				Si Niveau[I][J-1] = Mur et (Niveau[I+1][J] = Mur ou Niveau[I-1][J] = Caisse) alors
+				Debut si
+					ECHEC --> Vrai
+				Fin Si
+				Si une caisse forme un carré avec d'autres caisses ou de Mur ou bien Caisse_sur_Objectifs alors
+				Debut si
+					ECHEC --> Vrai
+				Fin Si
+				Si une caisse se trouve bloque dans une ligne et que le personnage ne peut pas la sortir alors
+				Debut si
+					ECHEC --> Vrai
+				Fin Si
+			fin Si
+		Fin Pour 
+	Fin Pour 
+	
+	RETOURNE ( ECHEC )
+Fin
+-----------------------------------------------------------------------------------------------------------------------------------------------
+

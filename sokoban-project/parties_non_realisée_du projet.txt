@@ -1,0 +1,5 @@
+Ce fichier est reservée aux parties qu'on a pas pu réaliser dans le projet, tout d'abord on a l'algorithme A*, on a pas pu implementer cet algorithme dans le jeu, mais parcontre on a pu l'écrire sous forme algorithmique et on a expliqué en détaille toutes les parties dans un autre fichier.
+Puis on a rencontré des difficultés en écrivant la fonction qui nous permet de détecter les deathlock( blocage) qui menent à l'échec de l'utilisateur, jusqu'à là on a pas pu trouver un algorithme pour le blocage en ligne.
+Certe on va rendre le projet avant lundi à 12h, mais moi je veux continuer à concevoir et implementer l'algorithme A* pour réaliser un Sloveur Sokoban en python et aussi de completer la fonction de blocage.
+
+Dans le dossier Algorithme vous trouveriez une fichier qui explique l'algorithme et deux autres fichiers dans lesquels on a commencé l'implementation avec python.

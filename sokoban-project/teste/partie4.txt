@@ -1,0 +1,32 @@
+Dans cette partie on va détailler la réalisation technique, l'implementation de notre application et les étapes à suivre par l'utilisateur pour pouvoir utiliser correctement l'application, donc dans cette partie on va trop détailler les algorithmes et les fonctions car on les a bien détaillé dans la partie 3.
+Pour réaliser ce fameux jeu de Sokoban, on a partagé le code dans trois différents fichiers python, un fichier nommé "classe.py" dans lequel on a utilisé une classe "Game" et certaines fonctions( Déplacement des objets, dessin des objets...) pour réaliser l'application, un fichier " CONSTANTES.py" qu'on va pas trop le détailler car ce fichier ne contient que quelques constantes telles que les objets(Mur, PLayer, CAISSE...) d'un niveau, les couleurs, les tailles des objets et un dernier fichier "main1.py" qui est le fichier principale de notre application.
+En fait, dans cette partie on va détaillé uniquement le fichier "main1.py" car c'est le principale pour relier tout le code, en ce qui concerne le fichier "classe.py" on a tout détailler dans le fichier lui même avec des commentaires et aussi dans la partie 3.
+Pour les graphismes on a utilissé Pygame. Pour pouvoir lancer l'application et jouer le jeu, l'utilisateur doit appeler le fichier principale "main1.py" et non les autres fichiers, dans les lignes qui suivent, on va décrire brièvement le contenu du fichier "main1.py" avant d'ulistrer les étapes que l'utilisateur doit suivre pour pourvoir jouer.
+Le fichier "main.py" est composé de trois grandes parties, une partie pour les importations des bibliothèque et modules, une partie pour les initalisations de certaines variables et bibliothèques et une dernière partie pour les boucle qui permettent de garder l'application active.
+
+										PARTIE 1 : Importation
+										----------------------
+Dans cette partie on va importer la bibliothèque pygame pour l'a utilisé ensuite dans les deux autres parties pour faire des animations, on importe aussi le module time et random qu'on les utilisera dans la partie des boucles pour interompre le programme pour quelques sécondes et pour choisir de nombres aléatoirement.
+Pour pouvoir utiliser toutes les constantes et les fonctions de nos deux fichiers, on importera les fichiers "classe.py" et "CONSTANTES.py".
+
+										PARTIE 2 : Initialisation
+										-------------------------
+Cette partie est réservée uniquement pour l'initialisation de la bibliothéques Pygame et certaines variables très indispensables pour la troisième partie telles que les variables booléennes qui servent des conditions à nos boucles et deux autres variables pour télécharger l'images et la musique.
+
+										PARTIE 4 : Boucles
+										------------------
+C'est la partie la plus compliquée à coder du fichier "main.py", elle est composée d'une boucle principale nommée "Game" qui va contenir 4 autres boucles.
+On va pas détailler tout le code qui compose ces boucles mais on détaillera la fonction de chaque boucle.
+Au début de chaque boucle on a une condition qui doit être remplie pour pouvoir entrer dans la boucle et exécuter le code de la boucle. cette condition on l'a mis pour ne pas créer des fenêtres quand l'utilisation ferme l'application et aussi dans ces conditions qu'on a crée nos fenêtres.
+Pour chaque boucle on a défini une variable booléenne et cette variable va représenter la boucle dans nos expliquations.
+Une fois qu'on dans la boucle principale, nous allons jouer la musique puis on entre dans la boucle guide, cette boucle a pour rôle de garder active la fenêtre de l'écran d'accueil dans laquelle on explique les principes du jeu et les boutons à utiliser pour jouer, c'est une sorte de guide. C'est dans cette boucle qu'on appelera notre Class "Game" avec tout ses attributs, méthodes et certaines fonctions du fichier "classe.py"
+Puis la boucle "Home" qui permet d'ouvrir une fenêtre à l'utilisateur en lui proposant plusieur niveaux qu'il doive choisir un d'entre eux, c'est la boucle qui permet de garder active la fenêtre de choix de niveau.
+En suite, dès que l'utilisateur choisi un niveau, on entre dans la boucle "play". Comme son nom l'indique, cette boucle permet de garder l'écran du jeu active pour permettre à l'utilisateur de jouer.
+Enfin, la dernière boucle nommée "Win_or_lose" qui s'occuppe de la victoire ou échec de l'utilisateur dans le jeu.
+En cas de victoire cette boucle va génerer une fenêtre avec deux options pour permetre à l'utilisateur de revenir à la fenêtre de choix de niveau ou bien de quitter l'application.
+En cas d'échec, en plus des deux autres options, l'utilisateur a une autre option pour pouvoir ressayer le le niveau actuel.
+
+										Chaine de traitement:
+										---------------------
+Une fois que l'utilisateur a lancé l'application, une fenêtre va s'ouvrir accompagner de l'image ci-dessous
+ 

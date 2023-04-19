@@ -1,0 +1,8 @@
+blackjack.controller
+blackjack.model.classes
+blackjack.model.enums
+blackjack.model.interfaces
+blackjack.model.states
+blackjack.model.strategies
+blackjack.test.model.classes
+blackjack.view
