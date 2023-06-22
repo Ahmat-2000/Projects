@@ -1,0 +1,56 @@
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 60em;
+	margin: auto;
+}
+
+.add {
+	display: block;
+	text-align: center;
+	padding: 1em;
+}
+
+.forum {
+	list-style: none;
+	padding: 0;
+}
+
+.forum li {
+	border: 1px solid black;
+	margin: .5em;
+	padding: 1em;
+}
+
+.forum .author {
+	font-weight: bold;
+}
+
+.forum .date {
+	font-style: italic;
+}
+
+.forum .text {
+	display: block;
+	margin-top: .5em;
+	border-top: 1px dotted gray;
+	padding-top: .5em;
+}
+
+label .error {
+	color: red;
+	font-weight: bold;
+}
+
+.feedback {
+	text-align: center;
+	font-weight: bold;
+	color: white;
+	background: crimson;
+	border-radius: 1em;
+	margin: 1em auto;
+	max-width: 90%;
+	padding: .5em;
+}
+
